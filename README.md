@@ -1,16 +1,16 @@
-## check-irc
+# check-irc
 
 Nagios check script for an ircd
 
 -----
 
-### Releases
+## Releases
 
 Check out the [releases](https://github.com/lrstanley/nagios-check-ircd/releases)
 page for prebuilt versions. Currently only amd64 linux, and arm is being built.
 If you need a specific version, you will need to install go and built it yourself.
 
-### Installation
+## Installation
 
 check-ircd should work on Ubuntu, CentOS, etc. Below are example commands of
 how you would install this (ensure to replace `${VERSION...}` etc, with the
@@ -19,6 +19,7 @@ appropriate vars):
 ```
 $ wget https://github.com/lrstanley/nagios-check-ircd/releases/download/${VERSION}/check-ircd_${VERSION_OS_ARCH}.tar.gz
 $ tar -C /usr/bin/ -xzvf check-ircd_${VERSION_OS_ARCH}.tar.gz check-ircd
+```
 
 An example Nagios config:
 
@@ -67,7 +68,7 @@ define command {
 }
 ```
 
-### Usage
+## Usage
 
 ```
 $ ./check-ircd -h
