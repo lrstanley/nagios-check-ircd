@@ -14,13 +14,14 @@ import (
 )
 
 type Config struct {
-	Host string `short:"H" long:"host" description:"irc server hostname or address" required:"true"`
-	Port int    `short:"p" long:"port" description:"irc server port" default:"6667"`
-	Nick string `short:"n" long:"nick" description:"nickname to use" default:"nagios-check"`
-	User string `short:"u" long:"user" description:"username (ident) to use" default:"nagios"`
-	V4   bool   `short:"4" description:"connect to the irc server via IPv4"`
-	V6   bool   `short:"6" description:"connect to the irc server via IPv6"`
-	TLS  struct {
+	Host   string `short:"H" long:"host" description:"irc server hostname or address" required:"true"`
+	Port   int    `short:"p" long:"port" description:"irc server port" default:"6667"`
+	Nick   string `short:"n" long:"nick" description:"nickname to use" default:"nagios-check"`
+	User   string `short:"u" long:"user" description:"username (ident) to use" default:"nagios"`
+	Passwd string `long:"password" description:"irc server password if required"`
+	V4     bool   `short:"4" description:"connect to the irc server via IPv4"`
+	V6     bool   `short:"6" description:"connect to the irc server via IPv6"`
+	TLS    struct {
 		Use       bool `long:"use" description:"enable tls checks"`
 		ValidCert bool `long:"check-cert" description:"if TLS certificate should be verified"`
 	} `group:"TLS Options" namespace:"tls"`
@@ -95,9 +96,9 @@ func main() {
 	}
 
 	if conf.TLS.Use {
-		err = check(conf.Nick, conf.User, conf.Host, conf.Port, &tls.Config{InsecureSkipVerify: !conf.TLS.ValidCert})
+		err = check(conf.Nick, conf.User, conf.Host, conf.Passwd, conf.Port, &tls.Config{InsecureSkipVerify: !conf.TLS.ValidCert})
 	} else {
-		err = check(conf.Nick, conf.User, conf.Host, conf.Port, nil)
+		err = check(conf.Nick, conf.User, conf.Host, conf.Passwd, conf.Port, nil)
 	}
 
 	if err != nil {
@@ -110,17 +111,18 @@ func main() {
 	os.Exit(0)
 }
 
-func check(nick, user, host string, port int, tlsConfig *tls.Config) error {
+func check(nick, user, host, password string, port int, tlsConfig *tls.Config) error {
 	done := make(chan bool, 1)
 	errs := make(chan error, 1)
 
 	ircConf := girc.Config{
-		Server:    host,
-		Port:      port,
-		Nick:      nick,
-		User:      user,
-		SSL:       tlsConfig != nil,
-		TLSConfig: tlsConfig,
+		Server:     host,
+		ServerPass: password,
+		Port:       port,
+		Nick:       nick,
+		User:       user,
+		SSL:        tlsConfig != nil,
+		TLSConfig:  tlsConfig,
 	}
 
 	if conf.Debug {
