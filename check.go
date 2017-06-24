@@ -105,7 +105,7 @@ func main() {
 		fmt.Fprintln(os.Stderr, "CRITICAL: "+err.Error())
 		os.Exit(1)
 	} else {
-		fmt.Println("SUCCESS")
+		fmt.Println("OK")
 	}
 
 	os.Exit(0)
