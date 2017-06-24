@@ -1,6 +1,6 @@
-# check-irc
+# check-ircd
 
-Nagios check script for an ircd
+Nagios script for monitoring the health of an ircd
 
 -----
 
