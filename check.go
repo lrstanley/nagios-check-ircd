@@ -5,10 +5,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"net"
 	"os"
 	"time"
-
-	"net"
 
 	flags "github.com/jessevdk/go-flags"
 	"github.com/lrstanley/girc"
