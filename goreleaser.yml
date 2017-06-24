@@ -1,0 +1,18 @@
+# goreleaser.yml
+build:
+  binary: check-ircd
+  goos:
+    - linux
+  goarch:
+    - amd64
+    - arm
+    - arm64
+  goarm:
+    - 6
+    - 7
+  hooks:
+    pre: make prep
+release:
+  draft: true
+snapshot:
+  name_template: snapshot-{{.Commit}}

@@ -1,0 +1,25 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "Oqx/4M+xDiB2ME3YkffeZmz/ohk=",
+			"path": "github.com/jessevdk/go-flags",
+			"revision": "5695738f733662da3e9afc2283bba6f3c879002d",
+			"revisionTime": "2017-05-21T21:21:05Z"
+		},
+		{
+			"checksumSHA1": "lwq5YQ9Jf0Rqup4QtPygPLUSBwQ=",
+			"path": "github.com/lrstanley/girc",
+			"revision": "7061d8e8e106d099be3620edc0cf1e526abf3a93",
+			"revisionTime": "2017-06-24T10:55:20Z"
+		},
+		{
+			"checksumSHA1": "fjMK2G5arnjllpoeBYeyf9Y2Iok=",
+			"path": "golang.org/x/net/proxy",
+			"revision": "5f8847ae0d0e90b6a9dc8148e7ad616874625171",
+			"revisionTime": "2017-06-23T17:10:45Z"
+		}
+	],
+	"rootPath": "github.com/lrstanley/nagios-check-ircd"
+}
