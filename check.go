@@ -50,9 +50,11 @@ func main() {
 
 	originHost := conf.Host
 
+	var ips []net.IP
+
 	if conf.V4 && !conf.V6 {
 		conf.Host = ""
-		ips, err := net.LookupIP(originHost)
+		ips, err = net.LookupIP(originHost)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, "CRITICAL: "+err.Error())
 			os.Exit(1)
@@ -72,7 +74,7 @@ func main() {
 
 	if conf.V6 && !conf.V4 {
 		conf.Host = ""
-		ips, err := net.LookupIP(originHost)
+		ips, err = net.LookupIP(originHost)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, "CRITICAL: "+err.Error())
 			os.Exit(1)
@@ -96,7 +98,7 @@ func main() {
 	}
 
 	if conf.TLS.Use {
-		err = check(conf.Nick, conf.User, conf.Host, conf.Passwd, conf.Port, &tls.Config{InsecureSkipVerify: !conf.TLS.ValidCert})
+		err = check(conf.Nick, conf.User, conf.Host, conf.Passwd, conf.Port, &tls.Config{ServerName: originHost, InsecureSkipVerify: !conf.TLS.ValidCert})
 	} else {
 		err = check(conf.Nick, conf.User, conf.Host, conf.Passwd, conf.Port, nil)
 	}
