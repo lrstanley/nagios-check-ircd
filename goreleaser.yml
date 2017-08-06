@@ -3,10 +3,12 @@ build:
   binary: check-ircd
   goos:
     - linux
+    - freebsd
   goarch:
     - amd64
     - arm
     - arm64
+    - 386
   goarm:
     - 6
     - 7
