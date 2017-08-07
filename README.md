@@ -1,8 +1,13 @@
 # check-ircd
 
-Nagios script for monitoring the health of an ircd
+Nagios utility for monitoring the health of an ircd
 
------
+## Table of Contents
+- [Releases](#releases)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Example Nagios config](#example-nagios-config)
+- [License](#license)
 
 ## Releases
 
@@ -54,7 +59,7 @@ Help Options:
   -h, --help            Show this help message
 ```
 
-An example Nagios config:
+# Example Nagios config
 
 ```
 define host {
@@ -99,4 +104,29 @@ define command {
 	command_name check_irc_tls
 	command_line /usr/bin/check-ircd -H $HOSTADDRESS$ -4 -p 6697 --tls.use
 }
+```
+
+## License
+
+```
+LICENSE: The MIT License (MIT)
+Copyright (c) 2017 Liam Stanley <me@liamstanley.io>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 ```
