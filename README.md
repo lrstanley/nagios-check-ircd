@@ -1,42 +1,61 @@
 # check-ircd
 
-Nagios utility for monitoring the health of an ircd
+Nagios utility for monitoring the health of an ircd.
 
 ## Table of Contents
-- [Releases](#releases)
 - [Installation](#installation)
+  - [Ubuntu/Debian](#ubuntudebian)
+  - [CentOS/Redhat](#centosredhat)
+  - [Manual Install](#manual-install)
+  - [Source](#source)
 - [Usage](#usage)
 - [Example Nagios config](#example-nagios-config)
 - [License](#license)
 
-## Releases
+## Installation
 
 Check out the [releases](https://github.com/lrstanley/nagios-check-ircd/releases)
-page for prebuilt versions. If you need a specific version, feel free to compile
-from source (you must install [Go](https://golang.org/doc/install) first):
+page for prebuilt versions. check-ircd should work on ubuntu/debian,
+centos/redhat/fedora, etc. Below are example commands of how you would install
+the utility (ensure to replace `${VERSION...}` etc, with the appropriate vars).
+
+### Ubuntu/Debian
+
+```bash
+$ wget https://github.com/lrstanley/nagios-check-ircd/releases/download/${VERSION}/check-ircd_${VERSION_OS_ARCH}.deb
+$ dpkg -i check-ircd_${VERSION_OS_ARCH}.deb
+```
+
+### CentOS/Redhat
+
+```bash
+$ yum localinstall https://github.com/lrstanley/nagios-check-ircd/releases/download/${VERSION}/check-ircd_${VERSION_OS_ARCH}.rpm
+```
+
+### Manual Install
+
+```bash
+$ wget https://github.com/lrstanley/nagios-check-ircd/releases/download/${VERSION}/check-ircd_${VERSION_OS_ARCH}.tar.gz
+$ tar -C /usr/bin/ -xzvf check-ircd_${VERSION_OS_ARCH}.tar.gz check-ircd
+$ chmod +x /usr/bin/check-ircd
+```
+
+### Source
+
+If you need a specific version, feel free to compile from source (you must
+install [Go](https://golang.org/doc/install) first):
 
 ```
 $ git clone https://github.com/lrstanley/nagios-check-ircd.git
 $ cd nagios-check-ircd
-$ make
-```
-
-## Installation
-
-check-ircd should work on Ubuntu, CentOS, etc. Below are example commands of
-how you would install this (ensure to replace `${VERSION...}` etc, with the
-appropriate vars):
-
-```
-$ wget https://github.com/lrstanley/nagios-check-ircd/releases/download/${VERSION}/nagios-check-ircd_${VERSION_OS_ARCH}.tar.gz
-$ tar -C /usr/bin/ -xzvf nagios-check-ircd_${VERSION_OS_ARCH}.tar.gz check-ircd
-$ chmod +x /usr/bin/check-ircd
+$ make help
+$ make build
 ```
 
 ## Usage
 
 ```
-$ check-ircd -h
+$ ./check-ircd -h
 Usage:
   check-ircd [OPTIONS]
 
@@ -59,7 +78,7 @@ Help Options:
   -h, --help            Show this help message
 ```
 
-# Example Nagios config
+## Exampe Nagios Config
 
 ```
 define host {
