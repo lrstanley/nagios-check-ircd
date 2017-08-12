@@ -1,4 +1,4 @@
-# goreleaser.yml
+project_name: check-ircd
 build:
   binary: check-ircd
   goos:
@@ -7,7 +7,15 @@ build:
   goarch:
     - amd64
     - 386
-release:
-  draft: true
+fpm:
+  homepage: https://github.com/lrstanley/nagios-check-ircd
+  maintainer: Liam Stanley <me@liamstanley.io>
+  description: Nagios utility for monitoring the health of an ircd.
+  license: MIT
+  formats:
+    - deb
+    - rpm
 snapshot:
   name_template: snapshot-{{.Commit}}
+release:
+  draft: true
