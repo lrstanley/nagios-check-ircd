@@ -2,6 +2,8 @@
 
 Nagios utility for monitoring the health of an ircd.
 
+_A sister project to [nagios-notify-irc](https://github.com/lrstanley/nagios-notify-irc)_
+
 ## Table of Contents
 - [Installation](#installation)
   - [Ubuntu/Debian](#ubuntudebian)
