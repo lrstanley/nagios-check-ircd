@@ -7,27 +7,30 @@ export $(PATH)
 BINARY=check-ircd
 LD_FLAGS += -s -w
 
-release: clean fetch
-	$(GOPATH)/bin/goreleaser --skip-publish
+help:
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-publish: clean fetch
+release: clean fetch ## Generate a release, but don't publish to GitHub.
+	$(GOPATH)/bin/goreleaser --skip-validate --skip-publish
+
+publish: clean fetch ## Generate a release, and publish to GitHub.
 	$(GOPATH)/bin/goreleaser
 
-snapshot: clean fetch
+snapshot: clean fetch ## Generate a snapshot release.
 	$(GOPATH)/bin/goreleaser --snapshot --skip-validate --skip-publish
 
-update-deps: fetch
+update-deps: fetch ## Updates all dependencies to the latest available versions.
 	$(GOPATH)/bin/govendor add +external
 	$(GOPATH)/bin/govendor remove +unused
 	$(GOPATH)/bin/govendor update +external
 
-fetch:
+fetch: ## Fetches the necessary dependencies to build.
 	test -f $(GOPATH)/bin/govendor || go get -u -v github.com/kardianos/govendor
 	test -f $(GOPATH)/bin/goreleaser || go get -u -v github.com/goreleaser/goreleaser
 	$(GOPATH)/bin/govendor sync
 
-clean:
+clean: ## Cleans up generated files/folders from the build.
 	/bin/rm -rfv "dist/" "${BINARY}"
 
-build: fetch
+build: fetch ## Builds the application.
 	go build -ldflags "${LD_FLAGS}" -i -v -o ${BINARY}
