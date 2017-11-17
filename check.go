@@ -18,16 +18,17 @@ import (
 )
 
 type Config struct {
-	Host   string `short:"H" long:"host" description:"irc server hostname or address" required:"true"`
-	Port   int    `short:"p" long:"port" description:"irc server port" default:"6667"`
-	Nick   string `short:"n" long:"nick" description:"nickname to use" default:"nagios-check"`
-	User   string `short:"u" long:"user" description:"username (ident) to use" default:"nagios"`
-	Passwd string `long:"password" description:"irc server password if required"`
-	V4     bool   `short:"4" description:"connect to the irc server via IPv4"`
-	V6     bool   `short:"6" description:"connect to the irc server via IPv6"`
-	TLS    struct {
-		Use       bool `long:"use" description:"enable tls checks"`
-		ValidCert bool `long:"check-cert" description:"if TLS certificate should be verified"`
+	Host     string `short:"H" long:"host" description:"irc server hostname or address" required:"true"`
+	Port     int    `short:"p" long:"port" description:"irc server port" default:"6667"`
+	Nick     string `short:"n" long:"nick" description:"nickname to use" default:"nagios-check"`
+	User     string `short:"u" long:"user" description:"username (ident) to use" default:"nagios"`
+	Password string `long:"password" description:"irc server password if required"`
+	V4       bool   `short:"4" description:"connect to the irc server via IPv4"`
+	V6       bool   `short:"6" description:"connect to the irc server via IPv6"`
+	TLS      struct {
+		Use       bool          `long:"use" description:"enable tls checks"`
+		ValidCert bool          `long:"check-cert" description:"if TLS certificate should be verified"`
+		MinExpire time.Duration `long:"min-expire" description:"minimum time allowed before warning of an expiring certificate"`
 	} `group:"TLS Options" namespace:"tls"`
 	Timeout time.Duration `short:"t" long:"timeout" description:"time before the connection attempt should be abandoned" default:"30s"`
 	Debug   bool          `short:"d" long:"debug" description:"enable debug output"`
@@ -102,9 +103,9 @@ func main() {
 	}
 
 	if conf.TLS.Use {
-		err = check(conf.Nick, conf.User, conf.Host, conf.Passwd, conf.Port, &tls.Config{ServerName: originHost, InsecureSkipVerify: !conf.TLS.ValidCert})
+		err = check(&tls.Config{ServerName: originHost, InsecureSkipVerify: !conf.TLS.ValidCert})
 	} else {
-		err = check(conf.Nick, conf.User, conf.Host, conf.Passwd, conf.Port, nil)
+		err = check(nil)
 	}
 
 	if err != nil {
@@ -117,16 +118,16 @@ func main() {
 	os.Exit(0)
 }
 
-func check(nick, user, host, password string, port int, tlsConfig *tls.Config) error {
+func check(tlsConfig *tls.Config) error {
 	done := make(chan bool, 1)
-	errs := make(chan error, 1)
+	errs := make(chan error, 10)
 
 	ircConf := girc.Config{
-		Server:     host,
-		ServerPass: password,
-		Port:       port,
-		Nick:       nick,
-		User:       user,
+		Server:     conf.Host,
+		ServerPass: conf.Password,
+		Port:       conf.Port,
+		Nick:       conf.Nick,
+		User:       conf.User,
 		SSL:        tlsConfig != nil,
 		TLSConfig:  tlsConfig,
 	}
@@ -138,6 +139,19 @@ func check(nick, user, host, password string, port int, tlsConfig *tls.Config) e
 	client := girc.New(ircConf)
 
 	client.Handlers.AddBg(girc.CONNECTED, func(c *girc.Client, e girc.Event) {
+		if conf.TLS.Use && conf.TLS.MinExpire > 0 {
+			cs, err := c.TLSConnectionState()
+			if err != nil {
+				errs <- err
+				return
+			}
+
+			if err = checkCertExpire(cs); err != nil {
+				errs <- err
+				return
+			}
+		}
+
 		client.Close()
 		done <- true
 	})
@@ -149,6 +163,8 @@ func check(nick, user, host, password string, port int, tlsConfig *tls.Config) e
 
 		done <- true
 	}()
+
+	defer client.Close()
 
 	select {
 	case err := <-errs:
@@ -166,4 +182,17 @@ func ipsToString(ips []net.IP) (out []string) {
 	}
 
 	return out
+}
+
+func checkCertExpire(cs *tls.ConnectionState) error {
+	for _, chain := range cs.VerifiedChains {
+		for _, cert := range chain {
+			expires := cert.NotAfter.Sub(time.Now())
+			if expires < conf.TLS.MinExpire {
+				return fmt.Errorf("tls cert expires in %s", expires.Truncate(time.Hour))
+			}
+		}
+	}
+
+	return nil
 }

@@ -76,6 +76,7 @@ Application Options:
 TLS Options:
       --tls.use         enable tls checks
       --tls.check-cert  if TLS certificate should be verified
+      --tls.min-expire= minimum time allowed before warning of an expiring certificate
 
 Help Options:
   -h, --help            Show this help message
