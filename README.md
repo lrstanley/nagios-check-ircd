@@ -1,4 +1,4 @@
-# check-ircd
+# nagios-check-ircd
 
 Nagios utility for monitoring the health of an ircd.
 

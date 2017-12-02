@@ -11,6 +11,7 @@ import (
 	"log"
 	"net"
 	"os"
+	"strings"
 	"time"
 
 	flags "github.com/jessevdk/go-flags"
@@ -61,8 +62,8 @@ func main() {
 		conf.Host = ""
 		ips, err = net.LookupIP(originHost)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, "CRITICAL: "+err.Error())
-			os.Exit(1)
+			fmt.Println("CRITICAL: " + err.Error())
+			os.Exit(2)
 		}
 
 		debug.Printf("resolved ips: %#v", ipsToString(ips))
@@ -81,8 +82,8 @@ func main() {
 		conf.Host = ""
 		ips, err = net.LookupIP(originHost)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, "CRITICAL: "+err.Error())
-			os.Exit(1)
+			fmt.Println("CRITICAL: " + err.Error())
+			os.Exit(2)
 		}
 
 		debug.Printf("resolved ips: %#v", ipsToString(ips))
@@ -98,8 +99,8 @@ func main() {
 	}
 
 	if conf.Host == "" {
-		fmt.Fprintln(os.Stderr, "CRITICAL: no record for "+originHost)
-		os.Exit(1)
+		fmt.Println("CRITICAL: no record for " + originHost)
+		os.Exit(2)
 	}
 
 	if conf.TLS.Use {
@@ -109,12 +110,16 @@ func main() {
 	}
 
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "CRITICAL: "+err.Error())
-		os.Exit(1)
-	} else {
-		fmt.Println("OK")
+		if strings.Contains(err.Error(), "tls cert expires in") {
+			fmt.Println("WARNING: " + err.Error())
+			os.Exit(1)
+		}
+
+		fmt.Println("CRITICAL: " + err.Error())
+		os.Exit(2)
 	}
 
+	fmt.Println("OK")
 	os.Exit(0)
 }
 
