@@ -25,21 +25,21 @@ the utility.
 ### Ubuntu/Debian
 
 ```bash
-$ wget https://github.com/lrstanley/nagios-check-ircd/releases/download/v0.0.6/check-ircd_v0.0.6_linux_amd64.deb
-$ dpkg -i check-ircd_v0.0.6_linux_amd64.deb
+$ wget https://github.com/lrstanley/nagios-check-ircd/releases/download/[[tag]]/check-ircd_[[tag]]_[[os]]_[[arch]].deb
+$ dpkg -i check-ircd_[[tag]]_[[os]]_[[arch]].deb
 ```
 
 ### CentOS/Redhat
 
 ```bash
-$ yum localinstall https://github.com/lrstanley/nagios-check-ircd/releases/download/v0.0.6/check-ircd_v0.0.6_linux_amd64.rpm
+$ yum localinstall https://github.com/lrstanley/nagios-check-ircd/releases/download/[[tag]]/check-ircd_[[tag]]_[[os]]_[[arch]].rpm
 ```
 
 ### Manual Install
 
 ```bash
-$ wget https://github.com/lrstanley/nagios-check-ircd/releases/download/v0.0.6/check-ircd_v0.0.6_linux_amd64.tar.gz
-$ tar -C /usr/bin/ -xzvf check-ircd_v0.0.6_linux_amd64.tar.gz check-ircd
+$ wget https://github.com/lrstanley/nagios-check-ircd/releases/download/[[tag]]/check-ircd_[[tag]]_[[os]]_[[arch]].tar.gz
+$ tar -C /usr/bin/ -xzvf check-ircd_[[tag]]_[[os]]_[[arch]].tar.gz check-ircd
 $ chmod +x /usr/bin/check-ircd
 ```
 
