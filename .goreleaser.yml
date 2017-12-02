@@ -6,7 +6,6 @@ build:
     - freebsd
   goarch:
     - amd64
-    - 386
 fpm:
   homepage: https://github.com/lrstanley/nagios-check-ircd
   maintainer: Liam Stanley <me@liamstanley.io>
