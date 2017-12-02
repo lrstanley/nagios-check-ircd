@@ -5,7 +5,7 @@ PATH := $(GOPATH)/bin:$(PATH)
 export $(PATH)
 
 BINARY=check-ircd
-VERSION=$(shell git describe --tags --abbrev=0 2>/dev/null)
+VERSION=$(shell git describe --tags --abbrev=0 2>/dev/null | sed -r "s:^v::g")
 LD_FLAGS += -s -w
 RSRC=README_TPL.md
 ROUT=README.md
