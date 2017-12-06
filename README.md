@@ -25,20 +25,20 @@ the utility.
 ### Ubuntu/Debian
 
 ```bash
-$ wget https://github.com/lrstanley/nagios-check-ircd/releases/download/v0.0.7/check-ircd_0.0.7_linux_amd64.deb
+$ wget https://liam.sh/ghr/check-ircd_0.0.7_linux_amd64.deb
 $ dpkg -i check-ircd_0.0.7_linux_amd64.deb
 ```
 
 ### CentOS/Redhat
 
 ```bash
-$ yum localinstall https://github.com/lrstanley/nagios-check-ircd/releases/download/v0.0.7/check-ircd_0.0.7_linux_amd64.rpm
+$ yum localinstall https://liam.sh/ghr/check-ircd_0.0.7_linux_amd64.rpm
 ```
 
 ### Manual Install
 
 ```bash
-$ wget https://github.com/lrstanley/nagios-check-ircd/releases/download/v0.0.7/check-ircd_0.0.7_linux_amd64.tar.gz
+$ wget https://liam.sh/ghr/check-ircd_0.0.7_linux_amd64.tar.gz
 $ tar -C /usr/bin/ -xzvf check-ircd_0.0.7_linux_amd64.tar.gz check-ircd
 $ chmod +x /usr/bin/check-ircd
 ```
