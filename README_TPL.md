@@ -24,20 +24,20 @@ the utility.
 
 ### Ubuntu/Debian
 
-```bash
+```console
 $ wget https://liam.sh/ghr/check-ircd_[[tag]]_[[os]]_[[arch]].deb
 $ dpkg -i check-ircd_[[tag]]_[[os]]_[[arch]].deb
 ```
 
 ### CentOS/Redhat
 
-```bash
+```console
 $ yum localinstall https://liam.sh/ghr/check-ircd_[[tag]]_[[os]]_[[arch]].rpm
 ```
 
 ### Manual Install
 
-```bash
+```console
 $ wget https://liam.sh/ghr/check-ircd_[[tag]]_[[os]]_[[arch]].tar.gz
 $ tar -C /usr/bin/ -xzvf check-ircd_[[tag]]_[[os]]_[[arch]].tar.gz check-ircd
 $ chmod +x /usr/bin/check-ircd
@@ -57,7 +57,7 @@ $ make build
 
 ## Usage
 
-```
+```console
 $ ./check-ircd -h
 Usage:
   check-ircd [OPTIONS]
