@@ -24,22 +24,22 @@ the utility.
 
 ### Ubuntu/Debian
 
-```bash
-$ wget https://liam.sh/ghr/check-ircd_0.0.7_linux_amd64.deb
-$ dpkg -i check-ircd_0.0.7_linux_amd64.deb
+```console
+$ wget https://liam.sh/ghr/check-ircd_0.0.8_linux_amd64.deb
+$ dpkg -i check-ircd_0.0.8_linux_amd64.deb
 ```
 
 ### CentOS/Redhat
 
-```bash
-$ yum localinstall https://liam.sh/ghr/check-ircd_0.0.7_linux_amd64.rpm
+```console
+$ yum localinstall https://liam.sh/ghr/check-ircd_0.0.8_linux_amd64.rpm
 ```
 
 ### Manual Install
 
-```bash
-$ wget https://liam.sh/ghr/check-ircd_0.0.7_linux_amd64.tar.gz
-$ tar -C /usr/bin/ -xzvf check-ircd_0.0.7_linux_amd64.tar.gz check-ircd
+```console
+$ wget https://liam.sh/ghr/check-ircd_0.0.8_linux_amd64.tar.gz
+$ tar -C /usr/bin/ -xzvf check-ircd_0.0.8_linux_amd64.tar.gz check-ircd
 $ chmod +x /usr/bin/check-ircd
 ```
 
@@ -57,29 +57,30 @@ $ make build
 
 ## Usage
 
-```
+```console
 $ ./check-ircd -h
 Usage:
   check-ircd [OPTIONS]
 
 Application Options:
-  -H, --host=           irc server hostname or address
-  -p, --port=           irc server port (default: 6667)
-  -n, --nick=           nickname to use (default: nagios-check)
-  -u, --user=           username (ident) to use (default: nagios)
-      --password=       irc server password if required
-  -4                    connect to the irc server via IPv4
-  -6                    connect to the irc server via IPv6
-  -t, --timeout=        time before the connection attempt should be abandoned (default: 30s)
-  -d, --debug           enable debug output
+  -H, --host=                 irc server hostname or address
+  -p, --port=                 irc server port (default: 6667)
+  -n, --nick=                 nickname to use (default: nagios-check)
+  -u, --user=                 username (ident) to use (default: nagios)
+      --password=             irc server password if required
+  -4                          connect to the irc server via IPv4
+  -6                          connect to the irc server via IPv6
+      --require-registration  Consider it successful ONLY if we receive RPL_WELCOME
+  -t, --timeout=              time before the connection attempt should be abandoned (default: 30s)
+  -d, --debug                 enable debug output
 
 TLS Options:
-      --tls.use         enable tls checks
-      --tls.check-cert  if TLS certificate should be verified
-      --tls.min-expire= minimum time allowed before warning of an expiring certificate
+      --tls.use               enable tls checks
+      --tls.check-cert        if TLS certificate should be verified
+      --tls.min-expire=       minimum time allowed before warning of an expiring certificate
 
 Help Options:
-  -h, --help            Show this help message
+  -h, --help                  Show this help message
 ```
 
 ## Exampe Nagios Config
