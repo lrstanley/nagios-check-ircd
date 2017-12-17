@@ -104,10 +104,12 @@ func main() {
 		os.Exit(2)
 	}
 
+	var extra string
+
 	if conf.TLS.Use {
-		err = check(&tls.Config{ServerName: originHost, InsecureSkipVerify: !conf.TLS.ValidCert})
+		extra, err = check(&tls.Config{ServerName: originHost, InsecureSkipVerify: !conf.TLS.ValidCert})
 	} else {
-		err = check(nil)
+		extra, err = check(nil)
 	}
 
 	if err != nil {
@@ -120,11 +122,15 @@ func main() {
 		os.Exit(2)
 	}
 
-	fmt.Println("OK")
+	if extra != "" {
+		extra = " " + extra
+	}
+
+	fmt.Println("OK" + extra)
 	os.Exit(0)
 }
 
-func check(tlsConfig *tls.Config) error {
+func check(tlsConfig *tls.Config) (extra string, err error) {
 	done := make(chan bool, 1)
 	errs := make(chan error, 10)
 
@@ -162,10 +168,14 @@ func check(tlsConfig *tls.Config) error {
 				return
 			}
 
-			if err = checkCertExpire(cs); err != nil {
+			var expires time.Duration
+
+			if expires, err = checkCertExpire(cs); err != nil {
 				errs <- err
 				return
 			}
+
+			extra += fmt.Sprintf("(cert expires in %s)", expires.Truncate(time.Hour))
 		}
 
 		client.Close()
@@ -184,14 +194,14 @@ func check(tlsConfig *tls.Config) error {
 
 	select {
 	case err := <-errs:
-		return err
+		return extra, err
 	case <-done:
-		return nil
+		return extra, nil
 	case <-time.After(conf.Timeout):
 		if conf.RequireRegistration && eventCount > 0 {
-			return fmt.Errorf("REGISTRATION TIMEOUT %ds (%d events)", int(conf.Timeout.Seconds()), eventCount)
+			return extra, fmt.Errorf("REGISTRATION TIMEOUT %ds (%d events)", int(conf.Timeout.Seconds()), eventCount)
 		}
-		return fmt.Errorf("TIMEOUT %ds", int(conf.Timeout.Seconds()))
+		return extra, fmt.Errorf("TIMEOUT %ds", int(conf.Timeout.Seconds()))
 	}
 }
 
@@ -203,15 +213,20 @@ func ipsToString(ips []net.IP) (out []string) {
 	return out
 }
 
-func checkCertExpire(cs *tls.ConnectionState) error {
+func checkCertExpire(cs *tls.ConnectionState) (time.Duration, error) {
+	var newest time.Duration
 	for _, chain := range cs.VerifiedChains {
 		for _, cert := range chain {
 			expires := cert.NotAfter.Sub(time.Now())
+			if newest > expires || newest == time.Duration(0) {
+				newest = expires
+			}
+
 			if expires < conf.TLS.MinExpire {
-				return fmt.Errorf("tls cert expires in %s", expires.Truncate(time.Hour))
+				return expires.Truncate(time.Hour), fmt.Errorf("tls cert expires in %s", expires.Truncate(time.Hour))
 			}
 		}
 	}
 
-	return nil
+	return newest, nil
 }
