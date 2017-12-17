@@ -31,8 +31,9 @@ type Config struct {
 		ValidCert bool          `long:"check-cert" description:"if TLS certificate should be verified"`
 		MinExpire time.Duration `long:"min-expire" description:"minimum time allowed before warning of an expiring certificate"`
 	} `group:"TLS Options" namespace:"tls"`
-	Timeout time.Duration `short:"t" long:"timeout" description:"time before the connection attempt should be abandoned" default:"30s"`
-	Debug   bool          `short:"d" long:"debug" description:"enable debug output"`
+	RequireRegistration bool          `long:"require-registration" description:"Consider it successful ONLY if we receive RPL_WELCOME"`
+	Timeout             time.Duration `short:"t" long:"timeout" description:"time before the connection attempt should be abandoned" default:"30s"`
+	Debug               bool          `short:"d" long:"debug" description:"enable debug output"`
 }
 
 var conf Config
@@ -143,7 +144,17 @@ func check(tlsConfig *tls.Config) error {
 
 	client := girc.New(ircConf)
 
-	client.Handlers.AddBg(girc.CONNECTED, func(c *girc.Client, e girc.Event) {
+	var eventCount int
+	event := girc.ALL_EVENTS
+	if conf.RequireRegistration {
+		event = girc.CONNECTED
+	}
+
+	client.Handlers.Add(girc.ALL_EVENTS, func(c *girc.Client, e girc.Event) {
+		eventCount++
+	})
+
+	client.Handlers.AddBg(event, func(c *girc.Client, e girc.Event) {
 		if conf.TLS.Use && conf.TLS.MinExpire > 0 {
 			cs, err := c.TLSConnectionState()
 			if err != nil {
@@ -177,6 +188,9 @@ func check(tlsConfig *tls.Config) error {
 	case <-done:
 		return nil
 	case <-time.After(conf.Timeout):
+		if conf.RequireRegistration && eventCount > 0 {
+			return fmt.Errorf("REGISTRATION TIMEOUT %ds (%d events)", int(conf.Timeout.Seconds()), eventCount)
+		}
 		return fmt.Errorf("TIMEOUT %ds", int(conf.Timeout.Seconds()))
 	}
 }
