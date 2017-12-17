@@ -26,10 +26,13 @@ publish: clean fetch ## Generate a release, and publish to GitHub.
 snapshot: clean fetch ## Generate a snapshot release.
 	$(GOPATH)/bin/goreleaser --snapshot --skip-validate --skip-publish
 
-update-deps: fetch ## Updates all dependencies to the latest available versions.
+update-deps: fetch ## Adds any missing dependencies, removes unused deps, etc.
 	$(GOPATH)/bin/govendor add +external
 	$(GOPATH)/bin/govendor remove +unused
-	$(GOPATH)/bin/govendor update +external
+	$(GOPATH)/bin/govendor update +vendor
+
+upgrade-deps: update-deps ## Upgrades all dependencies to the latest available versions and saves them.
+	$(GOPATH)/bin/govendor fetch +vendor
 
 fetch: ## Fetches the necessary dependencies to build.
 	test -f $(GOPATH)/bin/govendor || go get -u -v github.com/kardianos/govendor

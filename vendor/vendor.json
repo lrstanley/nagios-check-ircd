@@ -9,16 +9,10 @@
 			"revisionTime": "2017-09-26T14:47:05Z"
 		},
 		{
-			"checksumSHA1": "dgGEXOB2TVHFRgeOoZRbynQtVjo=",
+			"checksumSHA1": "QOMcRE1u7IMIkh8DpJl7l8a/2xk=",
 			"path": "github.com/lrstanley/girc",
-			"revision": "5b0cfbc4eb498887ff2cd714ca28174c4ed3f81b",
-			"revisionTime": "2017-11-17T12:48:28Z"
-		},
-		{
-			"checksumSHA1": "fjMK2G5arnjllpoeBYeyf9Y2Iok=",
-			"path": "golang.org/x/net/proxy",
-			"revision": "5f8847ae0d0e90b6a9dc8148e7ad616874625171",
-			"revisionTime": "2017-06-23T17:10:45Z"
+			"revision": "667539cee3f98dd37c886abd962e43a5d9e4fc17",
+			"revisionTime": "2017-12-15T12:53:54Z"
 		}
 	],
 	"rootPath": "github.com/lrstanley/nagios-check-ircd"
